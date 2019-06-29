@@ -1,4 +1,4 @@
-import Global from "./components/global/Global";
+import PDF from "./components/pdf";
 import ReactDOM from "react-dom";
 import React from 'react';
 //import { Router } from 'react-router';
@@ -6,5 +6,5 @@ import React from 'react';
 
 
 ReactDOM.render((
-  <Global/>
+  <PDF/>
 ), document.getElementById('whis'));

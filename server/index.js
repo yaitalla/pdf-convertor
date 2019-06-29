@@ -1,11 +1,19 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-// const database = require('./config/database/db');
+const upload = require('express-fileupload');
 const app = express();
+const helmet = require('helmet');
+const api = require('./routes/api');
+const cors = require('cors');
 
+app.use(cors({"origin": "*"}));
+app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(express.static('./dist/'));
+app.use(upload());
+app.use('/api', api);
+
+app.use(express.static('../client'));
 
 
 app.listen(process.env.port || 4000, () => {
