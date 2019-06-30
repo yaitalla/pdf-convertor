@@ -16,9 +16,11 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.1.5",
     "helmet": "^3.18.0",
+    "html-pdf": "^2.2.0",
     "js-file-download": "^0.4.7",
     "nodemon": "^1.19.1",
     "pdfkit": "^0.10.0",
-    "webshot": "^0.18.0"
+    "webshot": "^0.18.0",
+    "wkhtmltopdf": "^0.3.4"
   }
 }

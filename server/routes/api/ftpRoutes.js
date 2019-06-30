@@ -7,7 +7,9 @@ const ftpCtrl = require('../../controllers/ftpCtrl');
 router.post('/upload', /*checkToken,*/ ftpCtrl.upload);
 router.get('/getUploadedFiles', ftpCtrl.getFiles)
 router.get('/download', ftpCtrl.download);
-router.get('/screenshot', ftpCtrl.getScreenShot);
+router.get('/htmlToPdf', ftpCtrl.htmlToPdf);
+router.get('/urlToPdf', ftpCtrl.urlToPdf);
+router.post('/alamanoPdf', ftpCtrl.alamanoPdf);
 
 
 module.exports = router;
