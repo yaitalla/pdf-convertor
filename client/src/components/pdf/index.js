@@ -8,9 +8,10 @@ const Ftp = () => {
       // token: window.localStorage.token,
       // message: 'upload a file from your computer'
   
-  const [pdfText, setPdfText] = useState('');
-  const [chosenFile, setChosenFile] = useState(null);
-  const [fileToUpload, setFileToUpload] = useState(null);
+  const [firstname, setFirstname] = useState('');
+  const [cSumary, setCSumary] = useState('');
+  const [project, setProject] = useState('');
+  const [age, setAge] = useState(0)
 
 
   const getFiles = () => {
@@ -27,18 +28,7 @@ const Ftp = () => {
   const onChange = (event) => {
     setFileToUpload(event.target.files[0])
   }
-/*
-  const download = () => {
-    const headers = {
-			'x-access-token': window.localStorage.getItem('token')
-    }
-     return axios.get("http://localhost:4000/api/ftp/download",  {headers: headers}).then((res) => {
-      console.log(res)  
-  }).catch((err) => {
-      console.log('YASLOG', err)
-    });
-  };
-*/
+
   const upload = (event) => {
     if (fileToUpload == null) {
       return
@@ -55,33 +45,36 @@ const Ftp = () => {
 			console.log('YASLOG', err)
 		});
   }
-  const htmlToPdf = () => {
-    alert('Yaitalla Log: option disabled because wkhtmltopdf module make the server crash')
-  //   axios.get("http://localhost:4000/api/ftp/htmlToPdf").then((res) => {
-  //     console.log('retrouvez ce fichier dans ./server/');
-  // }).catch((err) => {
-  //     console.log('YASLOG', err)
-  //   });
+
+  const editName = (event) => {
+    setFirstname(event.target.value)
   }
-  const urlToPdf = () => {
-    axios.get("http://localhost:4000/api/ftp/urlToPdf").then((res) => {
-      console.log('retrouvez ce fichier dans ./server/');
-    }).catch((err) => {
-      console.log('YASLOG', err)
-    });
+  const editSumary = (event) => {
+    setCSumary(event.target.value)
   }
-  const editPdf = (event) => {
-    setPdfText(event.target.value)
+  const editProject = (event) => {
+    setProject(event.target.value)
+  }
+  const editAge = (event) => {
+    setAge(event.target.value)
   }
   const alamanoPdf = () => {
     const data = {
-      text: pdfText
+      name: firstname,
+      age: age,
+      sumary: cSumary,
+      previous: project
     }
+    console.log(data)
     axios.post("http://localhost:4000/api/ftp/alamanoPdf", data).then((res) => {
       console.log('retrouvez ce fichier dans ./server/');
-    }).catch((err) => {
-      console.log('YASLOG', err)
-    });
+    }).then(() => axios.get('fetchPDF', {responseType : 'blob'}))
+      .then((res) => {
+        const pdfBlob = new Blob([res.data], {type: 'application/pdf ' }) 
+      })
+      .catch((err) => {
+        console.log('YASLOG', err)
+      });
   }
 
     return (
@@ -94,22 +87,41 @@ const Ftp = () => {
         <form method="get" action="http://localhost:4000/api/ftp/download" encType="multipart/form-data">
           <button style={btn} type="submit" >download</button>
         </form>
+      
         <form method="get" onSubmit={getFiles}>
           <button style={btn} type="submit" name="" value="dfile">get files</button>
         </form>
-        <form method="get" onSubmit={htmlToPdf}>
-          <button  style={btn} type="submit" name="">convert html to pdf</button>
-        </form>
-        <form method="get" onSubmit={urlToPdf}>
-          <button  style={btn} type="submit" name="">convert url to pdf</button>
-        </form>
+      
         <form method="get" onSubmit={alamanoPdf}>
-        <input
-  						label="edit pdf"
-  						name="text"
-  						onChange={editPdf}
-  						value={pdfText}/>
-          <button  style={btn} type="submit" name="">create pdf Alamano</button>
+          <input
+                placeholder="first name"
+                label="edit name"
+                name="name"
+                onChange={editName}
+                value={firstname}
+          />
+          <input
+                placeholder="Career sumary"
+                label="sumary"
+                name="sumary"
+                onChange={editSumary}
+                value={cSumary}
+          />
+          <input
+                placeholder="age"
+                label="age"
+                name="age"
+                onChange={editAge}
+                value={age == 0 ? "" : age}
+          />
+          <input
+                placeholder="project"
+                label="previous project"
+                name="project"
+                onChange={editProject}
+                value={project}
+          />
+            <button  style={btn} type="submit" name="">create pdf Alamano</button>
         </form>
       </div>
     )

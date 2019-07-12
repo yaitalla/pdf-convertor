@@ -1,11 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const PDFDocument = require('pdfkit');
-// const webshot = require('webshot');
-const wkhtmltopdf = require('wkhtmltopdf');
 const pdf = require('html-pdf');
-const doc = new PDFDocument();
-doc.pipe(fs.createWriteStream('output.pdf'));
+const cors = require('cors');
+const template = require('./pdfTemplate');
+
+let name;
 
 const isEmpty = (obj) => {
     for(var key in obj) {
@@ -57,82 +56,22 @@ const getFiles = (req, res) => {
   });
 }
 
-const htmlToPdf = (req, res) => {
-  var html = fs.readFileSync('./uploadedFiles/index.html', 'utf8');
-  var options = { format: 'Letter' };
-
-  pdf.create(html, options).toFile('./fromHTML.pdf', function(err, res) {
-    if (err) return console.log(err);
-    console.log(res); // { filename: '/app/businesscard.pdf' }
-  });
-  return res.status(200).json(({
-    succes: true,
-    message: 'html converted'
-  }));
-
-  // webshot('https://yaitalla.github.io/Resume', 'yaitalla.png', (err) => {
-  //   if (!err) {
-  //     return res.status(200).json(({
-  //       succes: true,
-  //       message: 'screenshot taken'
-  //     }));
-  //   }
-  // });
-}
 const alamanoPdf = (req, res) => {
-  doc.pipe(fs.createWriteStream('output.pdf'));
-  doc.fontSize(25)
-    .text(req.body.text, 100, 100);
-
-  // Add an image, constrain it to a given size, and center it vertically and horizontally
-  doc.image('uploadedFiles/whisCover.png', {
-    fit: [250, 300],
-    align: 'center',
-    valign: 'center'
-  });
-
-  // Add another page
-  doc.addPage()
-    .fontSize(25)
-    .text('Here is some vector graphics...', 100, 100);
-
-  // Draw a triangle
-  doc.save()
-    .moveTo(100, 150)
-    .lineTo(100, 250)
-    .lineTo(200, 250)
-    .fill("#FF3300");
-
-  // Apply some transforms and render an SVG path with the 'even-odd' fill rule
-  // doc.scale(0.6)
-  //   .translate(470, -380)
-  //   .path('M 250,75 L 323,301 131,161 369,161 177,301 z')
-  //   .fill('red', 'even-odd')
-  //   .restore();
-
-  // Add some text with annotations
-  // doc.addPage()
-  //   .fillColor("blue")
-  //   .text('Here is a link!', 100, 100)
-  //   .underline(100, 100, 160, 27, {color: "#0000FF"})
-  //   .link(100, 100, 160, 27, 'http://google.com/');
-
-  // Finalize PDF file
-  doc.end();
-  return res.status(200).json(({
-        succes: true,
-        message: 'pdf created'
-      }));
+  name = req.body.name
+  console.log(req.body)
+  pdf.create(template(req.body), {}).toFile(req.body.name+'_CV.pdf', (err) => {
+    if (err) {
+      return Promise.reject();
+    }
+    return Promise.resolve()
+  })
 }
 
-const urlToPdf = (req, res) => {
-    wkhtmltopdf('https://yaitalla.github.io/Resume/')
-  .pipe(fs.createWriteStream('fromURL.pdf'));
-  return res.status(200).json(({
-          succes: true,
-          message: 'url converted'
-        }));
+const fetchPDF = (req, res) => {
+  console.log(req.body, 'ici')
+  res.sendFile(`${__dirname}/${name}.pdf`)
 }
+
 
 const download = (req, res) => {
  // console.log(req.headers)
@@ -147,7 +86,6 @@ module.exports = {
   upload,
   download,
   getFiles,
-  htmlToPdf,
-  urlToPdf,
-  alamanoPdf
+  alamanoPdf,
+  fetchPDF
 }
