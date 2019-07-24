@@ -6,6 +6,11 @@ export const container = {
   width: "100%"
 }
 
+export const form = {
+  display: "flex",
+  flexDirection: "column",
+}
+
 export const btn = {
   width: "100px",
   fontSize: "15px",
@@ -39,14 +44,5 @@ export const item = {
 }
 
 export const input = {
-  display: "block",
-  cursor: "pointer",
-  fontSize: "1000px",
-  filter: "alpha(opacity=0)",
-  maxHeight: "100%",
-  position: "absolute",
-  left: "0",
-  textAlign: "left",
-  top: "0",
-  opacity: "0"
+  width: "100px"
 }

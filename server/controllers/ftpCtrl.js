@@ -3,6 +3,7 @@ const path = require('path');
 const pdf = require('html-pdf');
 const cors = require('cors');
 const template = require('./pdfTemplate');
+const cv = require('./newcv')
 
 let name;
 
@@ -58,12 +59,12 @@ const getFiles = (req, res) => {
 
 const alamanoPdf = (req, res) => {
   name = req.body.name
-  console.log(req.body)
-  pdf.create(template(req.body), {}).toFile(req.body.name+'_CV.pdf', (err) => {
+  console.log('pdf creation...: ', req.body.name+'_CV.pdf')
+  pdf.create(cv(req.body), {}).toFile(req.body.name+'_CV.pdf', (err) => {
     if (err) {
-      return Promise.reject();
+      console.log('YASLOG', err);
     }
-    return Promise.resolve()
+    console.log('...pdf created successfuly')
   })
 }
 
